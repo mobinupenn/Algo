@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SDET Algo">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#4f46e5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<meta name="color-scheme" content="light dark">
+<title>SDET Algo Trainer</title>
+<style>
+:root{--bg:#f4f4f8;--card:#fff;--tx:#17171c;--mu:#6b6b78;--bd:#dedee6;--ac:#4f46e5;--acs:rgba(79,70,229,.12);--ok:#16a34a;--bad:#dc2626;--code:#eef0f6;--fs:13px;--n:10}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1014;--card:#1a1b21;--tx:#eceef4;--mu:#9a9cab;--bd:#2d2f38;--ac:#8b85ff;--acs:rgba(139,133,255,.16);--ok:#4ade80;--bad:#f87171;--code:#23252d}}
+@media (min-width:700px){:root{--fs:16px}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 -apple-system,system-ui,"Segoe UI",sans-serif;overscroll-behavior:none}
+button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
+#app{height:100vh;height:100dvh;max-width:860px;margin:0 auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) max(10px,env(safe-area-inset-right,0)) env(safe-area-inset-bottom,0) max(10px,env(safe-area-inset-left,0))}
+header{flex:none;padding:8px 2px 6px}
+.top{display:flex;align-items:center;gap:8px}
+.ttl{flex:1;min-width:0;font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px}
+.Easy{background:rgba(22,163,74,.16);color:var(--ok)}
+.Medium{background:rgba(217,119,6,.18);color:#d97706}
+.cnt{font-size:13px;color:var(--mu);font-variant-numeric:tabular-nums}
+.prog{height:4px;background:var(--bd);border-radius:4px;margin-top:7px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--ac);width:0;transition:width .3s}
+#stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto;position:relative;padding-bottom:6px}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mu);margin:2px 2px 4px}
+.zone{display:flex;flex-direction:column;gap:3px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:6px}
+#ans{flex:0 0 auto;min-height:48px;border-style:dashed}
+#pool{margin-top:auto}
+.empty{color:var(--mu);font-size:13px;padding:10px 6px;text-align:center}
+.pc{display:flex;align-items:center;gap:6px;width:auto;min-height:var(--ph);text-align:left;border:1px solid var(--bd);background:var(--code);border-radius:9px;padding:0 10px;font:var(--fs)/1.25 ui-monospace,"SF Mono",Menlo,monospace;white-space:pre-wrap;word-break:break-word}
+:root{--ph:clamp(30px,calc((100dvh - 250px) / var(--n) - 3px),46px)}
+.pc:active{background:var(--acs);border-color:var(--ac)}
+.pc .k{color:var(--mu);font-size:.8em;width:1.4em;flex:none}
+.pc.ok{border-color:var(--ok);background:rgba(22,163,74,.15)}
+.pc.bad{border-color:var(--bad);background:rgba(220,38,38,.15)}
+.shake{animation:sh .3s}
+@keyframes sh{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+#toast{position:absolute;left:0;right:0;top:0;margin:auto;width:max-content;max-width:94%;background:var(--tx);color:var(--bg);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;opacity:0;transform:translateY(-6px);transition:.2s;pointer-events:none;z-index:3}
+#toast.on{opacity:1;transform:none}
+nav{flex:none;display:grid;grid-template-columns:1fr 1fr 1.5fr 1fr 1fr;gap:6px;padding:8px 0 10px}
+nav button{height:54px;border:1px solid var(--bd);background:var(--card);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--mu);gap:1px}
+nav button b{font-size:19px;line-height:1;color:var(--tx)}
+nav button.pri{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:700;font-size:13px}
+nav button.pri b{color:#fff}
+nav button:active{opacity:.7}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.ov.on{display:flex}
+.sh{background:var(--card);width:100%;max-width:860px;max-height:88dvh;border-radius:22px 22px 0 0;padding:16px 16px calc(14px + env(safe-area-inset-bottom,0));display:flex;flex-direction:column;animation:up .22s}
+@keyframes up{from{transform:translateY(40px);opacity:.5}}
+.sb{overflow-y:auto;flex:1;min-height:0}
+.sh h2{margin:0 0 6px;font-size:20px}
+.sh p{margin:6px 0}
+.ex{background:var(--code);border-radius:10px;padding:10px 12px;font:13px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;margin:6px 0}
+.mu{color:var(--mu);font-size:14px}
+.big{width:100%;height:52px;border:0;border-radius:14px;background:var(--ac);color:#fff;font-weight:700;font-size:16px;margin-top:12px}
+.big.alt{background:var(--code);color:var(--tx);margin-top:8px}
+.chips{display:flex;gap:6px;margin:8px 0}
+.chip{flex:1;height:42px;border:1px solid var(--bd);background:var(--card);border-radius:12px;font-size:14px}
+.chip.on{border-color:var(--ac);background:var(--acs);color:var(--ac);font-weight:700}
+.row{display:flex;align-items:center;gap:8px;width:100%;min-height:50px;border:0;border-bottom:1px solid var(--bd);background:none;text-align:left;font-size:15px;padding:6px 2px}
+.row.cur{color:var(--ac);font-weight:700}
+.row .nm{flex:1}
+.tick{color:var(--ok);font-weight:700;width:18px}
+.test{border-left:3px solid var(--ac);padding:4px 12px;margin:10px 0;font-size:15px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="top"><div class="ttl" id="ttl"></div><span class="tag" id="dif"></span><span class="cnt" id="cnt"></span></div>
+    <div class="prog"><i id="bar"></i></div>
+  </header>
+  <div id="stage">
+    <div id="toast"></div>
+    <div><div class="lbl">Your solution</div><div class="zone" id="ans"></div></div>
+    <div id="pool-wrap"><div class="lbl">Tap lines to add</div><div class="zone" id="pool"></div></div>
+  </div>
+  <nav>
+    <button id="bInfo"><b>📄</b>Problem</button>
+    <button id="bHint"><b>💡</b>Hint</button>
+    <button id="bCheck" class="pri"><b>✓</b>Check</button>
+    <button id="bReset"><b>↺</b>Reset</button>
+    <button id="bMenu"><b>☰</b>Menu</button>
+  </nav>
+</div>
+<div class="ov" id="oInfo"><div class="sh"><div class="sb" id="infoB"></div><button class="big" id="go">Start building</button></div></div>
+<div class="ov" id="oMenu"><div class="sh"><div class="sb"><h2>Problems</h2>
+  <div class="chips" id="chips"></div><div id="rows"></div></div>
+  <button class="big alt" id="reveal">Reveal solution for this problem</button>
+  <button class="big alt" id="wipe">Reset all progress</button>
+  <button class="big" id="closeM">Close</button></div></div>
+<div class="ov" id="oRes"><div class="sh"><div class="sb"><h2>✓ Solved!</h2><p class="mu">Your solution is in the right order and indentation.</p><div class="test" id="resT"></div></div>
+  <button class="big" id="next">Next problem</button><button class="big alt" id="stay">Review solution</button></div></div>
+<script>
+const P=[
+{t:"Contains Duplicate",d:"Easy",desc:"Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.",ex:"Input: nums = [1,2,3,1]\nOutput: true\n\nInput: nums = [1,2,3,4]\nOutput: false",con:"1 <= nums.length <= 10^5",test:"Test: empty and single-element arrays, duplicates at the ends, negative numbers, a large all-unique array for speed.",
+code:`def contains_duplicate(nums):
+    seen = set()
+    for n in nums:
+        if n in seen:
+            return True
+        seen.add(n)
+    return False`},
+{t:"Two Sum",d:"Easy",desc:"Given an array of integers nums and an integer target, return the indices of the two numbers that add up to target. Each input has exactly one solution, and you may not use the same element twice.",ex:"Input: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: nums[0] + nums[1] == 9",con:"2 <= nums.length <= 10^4",test:"Test: duplicates ([3,3], 6), negatives, no valid pair, large arrays for performance.",
+code:`def two_sum(nums, target):
+    seen = {}
+    for i, n in enumerate(nums):
+        need = target - n
+        if need in seen:
+            return [seen[need], i]
+        seen[n] = i
+    return []`},
+{t:"Valid Parentheses",d:"Easy",desc:"Given a string s containing just the characters ( ) { } [ ], determine if the input string is valid. Open brackets must be closed by the same type of bracket, and in the correct order.",ex:"Input: s = \"()[]{}\"\nOutput: true\n\nInput: s = \"(]\"\nOutput: false",con:"1 <= s.length <= 10^4",test:"Test: empty string, only openers, only closers, deep nesting, interleaved types like \"([)]\".",
+code:`def is_valid(s):
+    pairs = {')': '(', ']': '[', '}': '{'}
+    stack = []
+    for ch in s:
+        if ch in pairs:
+            if not stack or stack.pop() != pairs[ch]:
+                return False
+        else:
+            stack.append(ch)
+    return not stack`},
+{t:"Valid Anagram",d:"Easy",desc:"Given two strings s and t, return true if t is an anagram of s, and false otherwise. An anagram uses all the original letters exactly once.",ex:"Input: s = \"anagram\", t = \"nagaram\"\nOutput: true\n\nInput: s = \"rat\", t = \"car\"\nOutput: false",con:"1 <= s.length, t.length <= 5 * 10^4",test:"Test: different lengths, repeated letters, case sensitivity, unicode characters.",
+code:`def is_anagram(s, t):
+    if len(s) != len(t):
+        return False
+    count = {}
+    for ch in s:
+        count[ch] = count.get(ch, 0) + 1
+    for ch in t:
+        if count.get(ch, 0) == 0:
+            return False
+        count[ch] -= 1
+    return True`},
+{t:"Binary Search",d:"Easy",desc:"Given a sorted array of integers nums and an integer target, return the index of target if it exists, otherwise return -1. You must write an algorithm with O(log n) runtime.",ex:"Input: nums = [-1,0,3,5,9,12], target = 9\nOutput: 4",con:"1 <= nums.length <= 10^4, all values unique",test:"Test: target at first and last index, not present, single element, even and odd lengths.",
+code:`def search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1`},
+{t:"Best Time to Buy and Sell Stock",d:"Easy",desc:"You are given an array prices where prices[i] is the price of a stock on day i. Choose one day to buy and a later day to sell to maximize profit. Return the maximum profit, or 0 if no profit is possible.",ex:"Input: prices = [7,1,5,3,6,4]\nOutput: 5\nExplanation: Buy at 1, sell at 6.",con:"1 <= prices.length <= 10^5",test:"Test: strictly decreasing prices, a single day, all equal prices, maximum at the start.",
+code:`def max_profit(prices):
+    low = float('inf')
+    best = 0
+    for p in prices:
+        low = min(low, p)
+        best = max(best, p - low)
+    return best`},
+{t:"Group Anagrams",d:"Medium",desc:"Given an array of strings strs, group the anagrams together. You can return the answer in any order.",ex:"Input: strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]\nOutput: [[\"eat\",\"tea\",\"ate\"],[\"tan\",\"nat\"],[\"bat\"]]",con:"1 <= strs.length <= 10^4",test:"Test: empty strings, one word, no anagrams at all; compare results without relying on order.",
+code:`def group_anagrams(strs):
+    groups = {}
+    for s in strs:
+        key = ''.join(sorted(s))
+        groups.setdefault(key, []).append(s)
+    return list(groups.values())`},
+{t:"Maximum Subarray",d:"Medium",desc:"Given an integer array nums, find the contiguous subarray with the largest sum, and return its sum.",ex:"Input: nums = [-2,1,-3,4,-1,2,1,-5,4]\nOutput: 6\nExplanation: [4,-1,2,1] has the largest sum 6.",con:"1 <= nums.length <= 10^5",test:"Test: all negative numbers, single element, all positive, zeros mixed in.",
+code:`def max_sub_array(nums):
+    best = cur = nums[0]
+    for n in nums[1:]:
+        cur = max(n, cur + n)
+        best = max(best, cur)
+    return best`},
+{t:"Longest Substring Without Repeating Characters",d:"Medium",desc:"Given a string s, find the length of the longest substring without repeating characters.",ex:"Input: s = \"abcabcbb\"\nOutput: 3\nExplanation: The answer is \"abc\".",con:"0 <= s.length <= 5 * 10^4",test:"Test: empty string, all same characters, repeat at the window edge (\"abba\"), spaces and symbols.",
+code:`def length_of_longest_substring(s):
+    last = {}
+    left = best = 0
+    for right, ch in enumerate(s):
+        if ch in last and last[ch] >= left:
+            left = last[ch] + 1
+        last[ch] = right
+        best = max(best, right - left + 1)
+    return best`},
+{t:"Merge Intervals",d:"Medium",desc:"Given an array of intervals where intervals[i] = [start, end], merge all overlapping intervals and return an array of the non-overlapping intervals that cover all the input.",ex:"Input: intervals = [[1,3],[2,6],[8,10],[15,18]]\nOutput: [[1,6],[8,10],[15,18]]",con:"1 <= intervals.length <= 10^4",test:"Test: touching intervals ([1,4],[4,5]), nested intervals, unsorted input, a single interval.",
+code:`def merge(intervals):
+    intervals.sort(key=lambda x: x[0])
+    out = [intervals[0]]
+    for start, end in intervals[1:]:
+        if start <= out[-1][1]:
+            out[-1][1] = max(out[-1][1], end)
+        else:
+            out.append([start, end])
+    return out`},
+{t:"Product of Array Except Self",d:"Medium",desc:"Given an integer array nums, return an array answer such that answer[i] is the product of all elements of nums except nums[i]. Solve it in O(n) time without using division.",ex:"Input: nums = [1,2,3,4]\nOutput: [24,12,8,6]",con:"2 <= nums.length <= 10^5",test:"Test: one zero, two zeros, negatives, length-2 input, very large values.",
+code:`def product_except_self(nums):
+    n = len(nums)
+    res = [1] * n
+    prefix = 1
+    for i in range(n):
+        res[i] = prefix
+        prefix *= nums[i]
+    suffix = 1
+    for i in range(n - 1, -1, -1):
+        res[i] *= suffix
+        suffix *= nums[i]
+    return res`},
+{t:"Top K Frequent Elements",d:"Medium",desc:"Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order. Your algorithm must be better than O(n log n).",ex:"Input: nums = [1,1,1,2,2,3], k = 2\nOutput: [1,2]",con:"1 <= k <= number of unique elements",test:"Test: k equal to the unique count, all elements equal, negatives, ties in frequency.",
+code:`def top_k_frequent(nums, k):
+    freq = {}
+    for n in nums:
+        freq[n] = freq.get(n, 0) + 1
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for n, c in freq.items():
+        buckets[c].append(n)
+    res = []
+    for c in range(len(buckets) - 1, 0, -1):
+        for n in buckets[c]:
+            res.append(n)
+            if len(res) == k:
+                return res
+    return res`}
+];
+P.forEach(p=>p.sol=p.code.split("\n").map(l=>({k:l,t:l.trim(),v:(l.length-l.trimStart().length)/4})));
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+let solved={},filter="All",cur=0,pool=[],ans=[],marks=null,tt;
+try{solved=JSON.parse(localStorage.getItem("sdetSolved2")||"{}");cur=+(localStorage.getItem("sdetCur2")||0)}catch(e){}
+const save=()=>{try{localStorage.setItem("sdetSolved2",JSON.stringify(solved));localStorage.setItem("sdetCur2",cur)}catch(e){}};
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const open=id=>$(id).classList.add("on"),close=id=>$(id).classList.remove("on");
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1800)}
+function head(){
+  const n=Object.keys(solved).length;
+  $("cnt").textContent=n+"/"+P.length;$("bar").style.width=(100*n/P.length)+"%";
+  $("ttl").textContent=(cur+1)+". "+P[cur].t;$("dif").textContent=P[cur].d;$("dif").className="tag "+P[cur].d;
+}
+function infoSheet(){const p=P[cur];
+  $("infoB").innerHTML=`<h2>${cur+1}. ${esc(p.t)} <span class="tag ${p.d}">${p.d}</span></h2><p>${esc(p.desc)}</p><div class="mu">Example</div><div class="ex">${esc(p.ex)}</div><p class="mu">Constraints: ${esc(p.con)}</p>`}
+function load(i,showInfo){
+  cur=i;save();const s=P[i].sol;
+  pool=shuf(s.map((o,k)=>({...o,id:k})));
+  if(pool.every((o,k)=>o.k===s[k].k))pool.reverse();
+  ans=[];marks=null;
+  document.documentElement.style.setProperty("--n",s.length);
+  head();infoSheet();render();
+  if(showInfo)open("oInfo");
+}
+function pc(o,idx,cls){return `<button class="pc ${cls||""}" style="margin-left:${o.v*12}px">${idx!=null?`<span class="k">${idx}</span>`:""}${esc(o.t)}</button>`}
+function render(){
+  $("ans").innerHTML=ans.length?ans.map((o,k)=>pc(o,k+1,marks?(marks[k]?"ok":"bad"):"")).join(""):'<div class="empty">Tap lines below to build the solution</div>';
+  $("pool").innerHTML=pool.length?pool.map(o=>pc(o)).join(""):'<div class="empty">All lines placed. Tap Check.</div>';
+  [...$("pool").querySelectorAll(".pc")].forEach((b,k)=>b.onclick=()=>{ans.push(pool.splice(k,1)[0]);marks=null;render()});
+  [...$("ans").querySelectorAll(".pc")].forEach((b,k)=>b.onclick=()=>{pool.push(ans.splice(k,1)[0]);marks=null;render()});
+}
+const pre=()=>{const s=P[cur].sol;let k=0;while(k<ans.length&&ans[k].k===s[k].k)k++;return k};
+$("bCheck").onclick=()=>{
+  const s=P[cur].sol;
+  if(!ans.length)return toast("Place some lines first");
+  marks=ans.map((o,k)=>o.k===s[k].k);render();
+  const bad=marks.filter(x=>!x).length;
+  if(!bad&&ans.length===s.length){
+    solved[cur]=1;save();head();$("resT").textContent=P[cur].test;
+    setTimeout(()=>open("oRes"),350);
+  }else if(!bad)toast("So far so good. Keep going.");
+  else{toast(bad+(bad==1?" line is":" lines are")+" out of place");$("ans").classList.remove("shake");void $("ans").offsetWidth;$("ans").classList.add("shake")}
+};
+$("bHint").onclick=()=>{
+  const s=P[cur].sol,k=pre();
+  while(ans.length>k)pool.push(ans.pop());
+  if(k<s.length){const j=pool.findIndex(o=>o.k===s[k].k);if(j>=0)ans.push(pool.splice(j,1)[0])}
+  marks=null;render();toast("Next correct line placed");
+};
+$("bReset").onclick=()=>load(cur);
+$("bInfo").onclick=()=>open("oInfo");
+$("go").onclick=()=>close("oInfo");
+$("bMenu").onclick=()=>{menu();open("oMenu")};
+$("closeM").onclick=()=>close("oMenu");
+function menu(){
+  $("chips").innerHTML=["All","Easy","Medium"].map(f=>`<button class="chip ${f==filter?"on":""}" data-f="${f}">${f}</button>`).join("");
+  $("rows").innerHTML=P.map((p,i)=>({p,i})).filter(o=>filter=="All"||o.p.d==filter)
+    .map(o=>`<button class="row ${o.i==cur?"cur":""}" data-i="${o.i}"><span class="tick">${solved[o.i]?"✓":""}</span><span class="nm">${o.i+1}. ${esc(o.p.t)}</span><span class="tag ${o.p.d}">${o.p.d}</span></button>`).join("");
+}
+$("chips").onclick=e=>{const f=e.target.dataset.f;if(f){filter=f;menu()}};
+$("rows").onclick=e=>{const r=e.target.closest(".row");if(r){close("oMenu");load(+r.dataset.i,true)}};
+$("reveal").onclick=()=>{ans=P[cur].sol.map((o,k)=>({...o,id:k}));pool=[];marks=null;render();close("oMenu");toast("Solution shown. Tap Reset to retry")};
+$("wipe").onclick=()=>{if(confirm("Clear all solved progress?")){solved={};save();head();menu()}};
+$("next").onclick=()=>{close("oRes");const order=P.map((_,i)=>i).filter(i=>filter=="All"||P[i].d==filter);
+  const nxt=order.find(i=>i>cur&&!solved[i])??order.find(i=>!solved[i])??order[(order.indexOf(cur)+1)%order.length];load(nxt,true)};
+$("stay").onclick=()=>close("oRes");
+document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{if(e.target===o)o.classList.remove("on")}));
+load(cur,true);
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+</script>
+</body>
+</html>

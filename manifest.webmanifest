@@ -1,0 +1,15 @@
+{
+  "name": "SDET Algo Trainer",
+  "short_name": "SDET Algo",
+  "description": "Python algorithm puzzles for SDET interview practice",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#4f46e5",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {"src": "icon-180.png", "sizes": "180x180", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
